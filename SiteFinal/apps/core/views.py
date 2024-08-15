@@ -279,6 +279,78 @@ def CriarCliente(request):
         else:
             return HttpResponse('Erro ao consumir a API: ', response.status_code)
 
+def EditarCliente(request, id_cliente):
+    url_editar_cliente = 'http://127.0.0.1:9000/api/clientes/' + str(id_cliente) # Substitua pela URL da API real
+    url_listar_clientes = 'http://127.0.0.1:9000/api/clientes' # Substitua pela URL da API real
+
+    obter_token = RetornaToken(request)
+    conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+    token = conteudo_bytes.decode('utf-8') 
+
+    # Cabeçalhos que você deseja enviar com a solicitação
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    resposta = requests.get(url_editar_cliente, headers=headers)
+    resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados = resposta.json()
+    cliente = dados['cliente']
+
+    resposta_clientes = requests.get(url_listar_clientes, headers=headers)
+    resposta_clientes.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados_clientes = resposta_clientes.json() # Obtém os dados JSON da resposta
+    clientes = dados_clientes['clientes']
+
+    if request.method == "GET":
+        return render(request, "form-cliente.html", {"cliente": cliente, 'clientes' : clientes}) 
+    else:
+        # Dados que você deseja enviar no corpo da solicitação POST
+        json = {
+            'tipo': request.POST['tipo']
+        }
+               
+        # Fazendo a solicitação POST
+        response = requests.put(url_editar_cliente, json=json, headers=headers)
+
+        # Obtendo o conteúdo da resposta
+        
+        if response.status_code in [200, 201]:
+            try:
+                return redirect("pg_criar_cliente")
+            except requests.JSONDecodeError:
+                print("A resposta não é um JSON válido.")
+        else:
+            return render(request, "form-cliente.html", {"cliente": cliente, 'clientes' : clientes})
+
+def ExcluirCliente(request, id_cliente):
+          url = 'http://127.0.0.1:9000/api/clientes/' + str(id_cliente) # Substitua pela URL da API real
+      
+          obter_token = RetornaToken(request)
+          conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+          token = conteudo_bytes.decode('utf-8') 
+      
+          # Cabeçalhos que você deseja enviar com a solicitação
+          headers = {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+          }
+          
+          if request.method == "GET":             
+              # Fazendo a solicitação DELETE
+              response = requests.delete(url, headers=headers)
+      
+              # Obtendo o conteúdo da resposta
+              
+              if response.status_code in [200]:
+                  try:
+                      return redirect("pg_criar_cliente")
+                  except requests.JSONDecodeError:
+                      print("A resposta não é um JSON válido.")
+              else:
+                  return HttpResponse('Erro ao consumir a API: ', response.status_code)
+
 # ==== EMPRESA ====
 
 # ==== SERVIÇOS ====
