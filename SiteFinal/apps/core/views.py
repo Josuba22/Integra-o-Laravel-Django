@@ -353,6 +353,96 @@ def ExcluirCliente(request, id_cliente):
 
 # ==== EMPRESA ====
 
+def CriarEmpresa(request):
+    url = 'http://127.0.0.1:9000/api/empresas' # Substitua pela URL da API real
+
+    obter_token = RetornaToken(request)
+    conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+    token = conteudo_bytes.decode('utf-8')
+
+    # Cabeçalhos que você deseja enviar com a solicitação
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+    
+    if request.method == "GET":
+        try:
+            resposta = requests.get(url, headers=headers)
+            resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+            dados = resposta.json() # Obtém os dados JSON da resposta
+        except requests.RequestException as e:
+            return HttpResponse(f'Erro ao consumir a API: {str(e)}', status=500)
+    
+        # Extraia a string desejada do JSON
+        empresas = dados['empresas']
+        return render(request, "form-cliente.html", {"empresas": empresas})
+    else:
+       # Dados que você deseja enviar no corpo da solicitação POST
+        json = {
+            'razao_social': request.POST['razao_social'],
+            'cnpj': request.POST['cnpj'],
+        }
+               
+        # Fazendo a solicitação POST
+        response = requests.post(url, json=json, headers=headers)
+
+        # Obtendo o conteúdo da resposta
+        
+        if response.status_code in [200, 201]:
+            try:
+                response_data = response.json()
+                return redirect("pg_criar_empresa")
+            except requests.JSONDecodeError:
+                print("A resposta não é um JSON válido.")
+        else:
+            return HttpResponse('Erro ao consumir a API: ', response.status_code)
+
+def EditarEmpresa(request, id_empresa):
+    url_editar_empresa = 'http://127.0.0.1:9000/api/empresas/' + str(id_empresa) # Substitua pela URL da API real
+    url_listar_empresas = 'http://127.0.0.1:9000/api/empresas' # Substitua pela URL da API real
+
+    obter_token = RetornaToken(request)
+    conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+    token = conteudo_bytes.decode('utf-8')
+
+    # Cabeçalhos que você deseja enviar com a solicitação
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    resposta = requests.get(url_editar_cliente, headers=headers)
+    resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados = resposta.json()
+    empresa = dados['empresa']
+
+    resposta_clientes = requests.get(url_listar_clientes, headers=headers)
+    resposta_clientes.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados_clientes = resposta_clientes.json() # Obtém os dados JSON da resposta
+    clientes = dados_clientes['clientes']
+
+    if request.method == "GET":
+        return render(request, "form-cliente.html", {"cliente": cliente, 'clientes' : clientes}) 
+    else:
+        # Dados que você deseja enviar no corpo da solicitação POST
+        json = {
+            'tipo': request.POST['tipo']
+        }
+               
+        # Fazendo a solicitação POST
+        response = requests.put(url_editar_cliente, json=json, headers=headers)
+
+        # Obtendo o conteúdo da resposta
+        
+        if response.status_code in [200, 201]:
+            try:
+                return redirect("pg_criar_cliente")
+            except requests.JSONDecodeError:
+                print("A resposta não é um JSON válido.")
+        else:
+            return render(request, "form-cliente.html", {"cliente": cliente, 'clientes' : clientes})
+
 # ==== SERVIÇOS ====
 
 def CriarServico(request):
@@ -381,7 +471,6 @@ def CriarServico(request):
     empresas = dados_empresas['empresas']
     
     if request.method == "GET":
-        novo_servico = FormularioServico()
 
         try:
             resposta = requests.get(url, headers=headers)
@@ -392,7 +481,7 @@ def CriarServico(request):
     
         # Extraia a string desejada do JSON
         servicos = dados['servicos']
-        return render(request, "form-servico.html", {"form_categoria" : novo_servico,"servicos": servicos,"categorias": categorias, "servicos": servicos})
+        return render(request, "form-servico.html", {"servicos": servicos,"categorias": categorias, "servicos": servicos})
     else:
        # Dados que você deseja enviar no corpo da solicitação POST
         json = {
