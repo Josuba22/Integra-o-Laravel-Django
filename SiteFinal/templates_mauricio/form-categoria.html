@@ -1,56 +1,53 @@
+  
 {% extends "base.html" %}
 {% block titulo %}
 {% load static %}
     <a href="{% url "pg_inicial" %}">
         <button>Voltar</button>
     </a>
-
     <h2>Formulário Categoria</h2>
 {% endblock %}
 {% block conteudo %}
-
-        <form method="post" id="form_categoria">
+        
+        
+        <form method="post" id='form_categoria'>
             {% csrf_token %}
             <p>
             <label for="id_tipo">Tipo:</label>
-            <input type="text" name="tipo" maxlength="100" required="" id="id_tipo" value="{{ categoria.tipo }}">  
+            <input type="text" name="tipo" maxlength="100"  id="id_tipo" value="{{ categoria.tipo }}">  
             </p>
-            <button type="submit" id="Salvar">Salvar</button>
+            <button type="submit" class="btn btn-primary" id='salvar'>Salvar</button>
             <a href="{% url "pg_criar_servico" %}">
-                <button type="button">Cancelar</button>
+                <button type="button" class="btn btn-danger">Cancelar</button>
             </a>
         </form>
 
         <h2>Lista de Categorias</h2>
-
         <table class="table">
             <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Opções</th>
-                </tr>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Opções</th>
+              </tr>
             </thead>
-
             <tbody>
-                    {% for categoria in categorias %}
-                <tr>
-                    <th scope="row">{{ categoria.id }}</th>
+                {% for categoria in categorias %}
+                    <tr>
+                    <th scope="row">{{categoria.id}}</th>
                     <td>{{ categoria.tipo }}</td>
                     <td>
                     <div class="btns_formulario">
                         <a href="{% url "pg_editar_categoria" categoria.id %}">
                             <span>Editar Categoria</span>
                         </a>
-
-                        <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick="">
+                        <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick=" return confirm('Deseja realmente excluir?')">
                             <span>Excluir Categoria</span>
                         </a>
                     </div>
-
-                    {% endfor %}
-                </tr>
+                    
+                {% endfor %}
             </tbody>
         </table>
-    <script src="{% static "js/validacoes_categoria.js" %}"></script>
+    <script src="{% static 'js/validacoes_categoria.js'%}"></script>
     {% endblock %}

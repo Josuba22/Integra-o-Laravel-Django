@@ -646,3 +646,97 @@ def CriarOrdemServico(request):
             return HttpResponse('Erro ao consumir a API: ', response.status_code)
 
 # ==== PRODUTO ====
+
+def CriarProduto(request):
+    url = 'http://127.0.0.1:9000/api/produtos' # Substitua pela URL da API real
+
+    obter_token = RetornaToken(request)
+    conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+    token = conteudo_bytes.decode('utf-8') 
+
+    # Cabeçalhos que você deseja enviar com a solicitação
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    if request.method == "GET":
+
+        try:
+            resposta = requests.get(url, headers=headers)
+            resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+            dados = resposta.json() # Obtém os dados JSON da resposta
+        except requests.RequestException as e:
+            return HttpResponse(f'Erro ao consumir a API: {str(e)}', status=500)
+    
+        # Extraia a string desejada do JSON
+        produtos = dados['produtos']
+        return render(request, "form-produto.html", {"produtos": produtos})
+    else:
+        # Dados que você deseja enviar no corpo da solicitação POST
+        json = {
+            'nome': request.POST['nome'],
+            'valor': request.POST['valor'],
+            'descricao': request.POST['descricao'],
+        }
+                
+        # Fazendo a solicitação POST
+        response = requests.post(url, json=json, headers=headers)
+
+        # Obtendo o conteúdo da resposta
+        
+        if response.status_code in [200, 201]:
+            try:
+                response_data = response.json()
+                return redirect("pg_criar_produto")
+            except requests.JSONDecodeError:
+                print("A resposta não é um JSON válido.")
+        else:
+            return HttpResponse('Erro ao consumir a API: ', response.status_code)
+
+def EditarProduto(request, id_produto):
+    url_editar_produto = 'http://127.0.0.1:9000/api/produtos/' + str(id_produto) # Substitua pela URL da API real
+    url_listar_produtos = 'http://127.0.0.1:9000/api/produtos' # Substitua pela URL da API real
+
+    obter_token = RetornaToken(request)
+    conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
+    token = conteudo_bytes.decode('utf-8') 
+
+    # Cabeçalhos que você deseja enviar com a solicitação
+    headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+
+    resposta = requests.get(url_editar_produto, headers=headers)
+    resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados = resposta.json()
+    produto = dados['produto']
+
+    resposta_produtos = requests.get(url_listar_produtos, headers=headers)
+    resposta_produtos.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
+    dados_produtos = resposta_produtos.json() # Obtém os dados JSON da resposta
+    produtos = dados_produtos['produtos']
+
+    if request.method == "GET":
+        return render(request, "form-produto.html", {"produto": produto, 'produtos': produtos}) 
+    else:
+        # Dados que você deseja enviar no corpo da solicitação POST
+        json = {
+            'nome': request.POST['nome'],
+            'valor': request.POST['valor'],
+            'descricao': request.POST['descricao'],
+        }
+               
+        # Fazendo a solicitação POST
+        response = requests.put(url_editar_produto, json=json, headers=headers)
+
+        # Obtendo o conteúdo da resposta
+        
+        if response.status_code in [200, 201]:
+            try:
+                return redirect("pg_criar_produto")
+            except requests.JSONDecodeError:
+                print("A resposta não é um JSON válido.")
+        else:
+            return render(request, "form-cliente.html", {"produto": produto, 'produtos': produtos})
