@@ -20,5 +20,5 @@ urlpatterns = [
     path("excluir-categoria/<int:id_categoria>", ExcluirCategoria, name="pg_excluir_categoria"),
     path("criar-ordemservico", CriarOrdemServico, name="pg_criar_ordemservico"),
     path("excluir-ordemservico/<int:id_os>", ExcluirOrdemServico, name="pg_excluir_ordemservico"),
-    path("ibge", ibge, name="ibge"),
+    # path("ibge", ibge, name="ibge"),
 ]
