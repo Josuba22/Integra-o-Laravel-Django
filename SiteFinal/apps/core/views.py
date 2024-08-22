@@ -369,6 +369,7 @@ def CriarEmpresa(request):
     }
     
     if request.method == "GET":
+        nova_empresa = FormularioEmpresa()
         try:
             resposta = requests.get(url, headers=headers)
             resposta.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
@@ -378,7 +379,7 @@ def CriarEmpresa(request):
     
         # Extraia a string desejada do JSON
         empresas = dados['empresas']
-        return render(request, "form-empresa.html", {"empresas": empresas})
+        return render(request, "form-empresa.html", {"form_empresa": nova_empresa,"empresas": empresas})
     else:
        # Dados que você deseja enviar no corpo da solicitação POST
         json = {
