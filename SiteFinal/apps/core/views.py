@@ -766,12 +766,12 @@ def CriarOrdemServico(request):
     
         # Extraia a string desejada do JSON
         ordemServicos = dados['ordemServicos']
-        return render(request, "form-ordemservico.html", {"ordemServico":ordemServicos, "clientes": clientes, "servicos": servicos})
+        return render(request, "form-ordemServico.html", {"ordemServicos":ordemServicos, "clientes": clientes, "servicos": servicos})
     else:
        # Dados que você deseja enviar no corpo da solicitação POST
         json = {
-            'cliente': request.POST['cliente'],
-            'servico': request.POST['servico'],
+            'cliente_id': request.POST['cliente_id'],
+            'servico_id': request.POST['servico_id'],
             'data_servico': request.POST['data_servico'],
         }
                
@@ -788,8 +788,8 @@ def CriarOrdemServico(request):
         else:
             return HttpResponse('Erro ao consumir a API: ', response.status_code)
 
-def ExcluirOrdemServico(request, id_ordemServico):
-          url = 'http://127.0.0.1:9000/api/ordemServicos/' + str(id_ordemServico) # Substitua pela URL da API real
+def ExcluirOrdemServico(request, id_os):
+          url = 'http://127.0.0.1:9000/api/ordemServicos/' + str(id_os) # Substitua pela URL da API real
       
           obter_token = RetornaToken(request)
           conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
@@ -807,13 +807,13 @@ def ExcluirOrdemServico(request, id_ordemServico):
       
               # Obtendo o conteúdo da resposta
               
-              if response.status_code in [200]:
+              if response.status_code in [200, 204]:
                   try:
                       return redirect("pg_criar_ordemservico")
                   except requests.JSONDecodeError:
                       print("A resposta não é um JSON válido.")
               else:
-                  return HttpResponse('Erro ao consumir a API: ', response.status_code)
+                  return HttpResponse(response)
 
 # ==== PRODUTO ====
 

@@ -1,49 +1,79 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Formulário Ordem de Serviço</title>
-    </head>
-    <body>
+
+{% block titulo %}
+    <a href="{% url "pg_inicial" %}">
+        <button>Voltar</button>
+    </a>
+    <h2>Formulário Ordem de Serviços</h2>
+{% endblock %}
+
+{% block conteudo %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="id_cliente">Cliente:</label>
+            <select name="cliente_id" class="form-control" id="cliente_id">
+                <option value="" selected=""></option>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <label for="id_servico">Serviço:</label>
+            <select name="servico_id" class="form-control" required="" id="servico_id">
+                <option value="" selected=""></option>
+                {% for servico in servicos %}
+                    <option value="{{ servico.id }}">{{ servico.tipo }}</option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <label for="data_servico">Data servico:</label>
+            <input type="date" class="form-control" name="data_servico" maxlength="100" required="" id="data_servico">
+        </p>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
         <a href="{% url "pg_inicial" %}">
-            <button>Voltar</button>
+            <button type="button" class="btn btn-danger">Cancelar</button>
         </a>
-        <h2>Formulário Ordem de Serviço</h2>
+    </form>
 
-        <form method="post">
-            {% csrf_token %}
-            <p>
-                <label for="cliente_id">Cliente:</label>
-                <select name="cliente_id" required="" id="cliente_id">
-                    <option value="" selected=""></option>
-                    {% for cliente in clientes %}
-                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
-                    {% endfor %}
-                </select>
-            </p>
+    <h2>Lista de Ordem de Serviços</h2>
 
-            <p>
-                <label for="servico_id">Serviço:</label>
-                <select name="servico_id" required="" id="servico_id">
-                    <option value="" selected=""></option>
-                    {% for servico in servicos %}
-                        <option value="{{ servico.id }}">{{ servico.nome }}</option>
-                    {% endfor %}
-                </select>
-            </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Serviço</th>
+                <th scope="col">Data do Serviço</th>
+            </tr>
+        </thead>
 
-            <p>
-                <label for='tipo'>Data:</label>
-                <input type='date' name='tipo' maxlength='50' required='' id='date'></input> 
-            </p>
-
-            <button type="submit">Salvar</button>
-            <a href="{% url "pg_inicial" %}">
-                <button type="button">Cancelar</button>
-            </a>
-        </form>
-
-    </body>
-</html>
+        <tbody>
+            {% for os in ordemServicos %}
+                <tr>
+                    <th scope="row">{{ os.id }}</th>
+                    <td>{{ os.cliente.nome }}</td>
+                    <td>{{ os.servico.tipo }}</td>
+                    <td>{{ os.data }}</td>
+                    <td>
+                        {% comment %} <a href="{% url "pg_editar_ordemservico" os.id %}"> {% endcomment %}
+                            <span>Editar</span>
+                        </a>
+                        <a href="{% url "pg_excluir_ordemservico" os.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                            <span>Excluir</span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/validacoes.js'%}"></script>
+{% endblock %}

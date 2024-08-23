@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Formulário Ordem de Serviço</title>
+    </head>
+    <body>
+        <a href="{% url "pg_inicial" %}">
+            <button>Voltar</button>
+        </a>
+        <h2>Formulário Ordem de Serviço</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <p>
+                <label for="cliente_id">Cliente:</label>
+                <select name="cliente_id" required="" id="cliente_id">
+                    <option value="" selected=""></option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <p>
+                <label for="servico_id">Serviço:</label>
+                <select name="servico_id" required="" id="servico_id">
+                    <option value="" selected=""></option>
+                    {% for servico in servicos %}
+                        <option value="{{ servico.id }}">{{ servico.nome }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <p>
+                <label for='tipo'>Data:</label>
+                <input type='date' name='tipo' maxlength='50' required='' id='date'></input> 
+            </p>
+
+            <button type="submit">Salvar</button>
+            <a href="{% url "pg_inicial" %}">
+                <button type="button">Cancelar</button>
+            </a>
+        </form>
+
+    </body>
+</html>
