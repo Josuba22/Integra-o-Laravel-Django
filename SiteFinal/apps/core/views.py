@@ -773,6 +773,7 @@ def CriarOrdemServico(request):
             'cliente_id': request.POST['cliente_id'],
             'servico_id': request.POST['servico_id'],
             'data_servico': request.POST['data_servico'],
+            'status': request.POST['status'],
         }
                
         # Fazendo a solicitação POST

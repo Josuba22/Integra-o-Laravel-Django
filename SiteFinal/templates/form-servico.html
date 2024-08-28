@@ -10,77 +10,86 @@
         <button>+ Categoria</button>
     </a>
 
-    <h2>Formulário Serviço</h2>
+    <div class="container">
+        <h2>Formulário Serviço</h2>
+    </div>
 {% endblock %}
 
 {% block conteudo %}
-    <form method="post">
-        {% csrf_token %}
-        <p> 
-            <label for="tipo">Tipo servico:</label>
-            <input type="text" class="form-control" name="tipo" maxlength="100" required="" id="tipo">
-        </p>
-            
-        <p>
-            <label for="valor">Valor servico:</label>
-            <input type="number" class="form-control" name="valor" step="0.01" required="" id="valor">
-        </p>
-            
-        <p>
-            <label for="id_empresa">Empresa:</label>
-            <select name="empresa_id" class="form-control" required="" id="empresa_id">
-                <option value="" selected=""></option>
-                {% for empresa in empresas %}
-                    <option value="{{ empresa.id }}">{{ empresa.razao_social }}</option>
-                {% endfor %}
-            </select>
-        </p>
-            
-        <p>
-            <label for="id_categoria">Categoria:</label>
-            <select name="categoria_id" class="form-control" required="" id="categoria_id">
-                <option value="" selected=""></option>
-                {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}">{{ categoria.tipo }}</option>
-                {% endfor %}
-            </select>
-        </p>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url "pg_inicial" %}">
-            <button type="button" class="btn btn-danger">Cancelar</button>
-        </a>
-    </form>    
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <p> 
+                <label for="tipo">Tipo servico:</label>
+                <input type="text" class="form-control" name="tipo" maxlength="100" required="" id="tipo">
+            </p>
+                
+            <p>
+                <label for="valor">Valor servico:</label>
+                <input type="number" class="form-control" name="valor" step="0.01" required="" id="valor">
+            </p>
+                
+            <p>
+                <label for="id_empresa">Empresa:</label>
+                <select name="empresa_id" class="form-control" required="" id="empresa_id">
+                    <option value="" selected=""></option>
+                    {% for empresa in empresas %}
+                        <option value="{{ empresa.id }}">{{ empresa.razao_social }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+                
+            <p>
+                <label for="id_categoria">Categoria:</label>
+                <select name="categoria_id" class="form-control" required="" id="categoria_id">
+                    <option value="" selected=""></option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.tipo }}</option>
+                    {% endfor %}
+                </select>
+            </p>
 
-    <h2>Lista de Serviços</h2>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url "pg_inicial" %}">
+                <button type="button" class="btn btn-danger">Cancelar</button>
+            </a>
+        </form>
+    </div>
+    
+    <div class="container">
+        <h2>Lista de Serviços</h2>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope='col'>Tipo</th>
-                <th scope='col'>Valor</th>
-                <th scope='col'>Empresa</th>
-                <th scope='col'>Categoria</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for servico in servicos %}
+    <div class="container">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ servico.tipo }}</td>
-                    <td>R$ {{ servico.valor }}</td>
-                    <td>{{ servico.empresa.razao_social }}</td>
-                    <td>{{ servico.categoria.tipo }}</td>
-                    <td>
-                        <a href="{% url "pg_editar_servico" servico.id %}">
-                            <span>Editar Serviço</span>
-                        </a>
-                        <a href="{% url "pg_excluir_servico" servico.id %}" onclick="return confirm('Deseja realmente excluir?')">
-                            <span>Excluir serviço</span>
-                        </a>
-                    </td>
+                    <th scope='col'>Tipo</th>
+                    <th scope='col'>Valor</th>
+                    <th scope='col'>Empresa</th>
+                    <th scope='col'>Categoria</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>    
+            </thead>
+
+            <tbody>
+                {% for servico in servicos %}
+                    <tr>
+                        <td>{{ servico.tipo }}</td>
+                        <td>R$ {{ servico.valor }}</td>
+                        <td>{{ servico.empresa.razao_social }}</td>
+                        <td>{{ servico.categoria.tipo }}</td>
+                        <td>
+                            <a href="{% url "pg_editar_servico" servico.id %}">
+                                <span>Editar Serviço</span>
+                            </a>
+                            <a href="{% url "pg_excluir_servico" servico.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                                <span>Excluir serviço</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

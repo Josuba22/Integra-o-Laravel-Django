@@ -5,74 +5,93 @@
     <a href="{% url "pg_inicial" %}">
         <button>Voltar</button>
     </a>
-    <h2>Formulário Ordem de Serviços</h2>
+    <div class="container">
+        <h2>Formulário Ordem de Serviços</h2>
+    </div>
 {% endblock %}
 
 {% block conteudo %}
-    <form method="post">
-        {% csrf_token %}
-        <p>
-            <label for="id_cliente">Cliente:</label>
-            <select name="cliente_id" class="form-control" id="cliente_id">
-                <option value="" selected=""></option>
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
-                {% endfor %}
-            </select>
-        </p>
 
-        <p>
-            <label for="id_servico">Serviço:</label>
-            <select name="servico_id" class="form-control" required="" id="servico_id">
-                <option value="" selected=""></option>
-                {% for servico in servicos %}
-                    <option value="{{ servico.id }}">{{ servico.tipo }}</option>
-                {% endfor %}
-            </select>
-        </p>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <p>
+                <label for="id_cliente">Cliente:</label>
+                <select name="cliente_id" class="form-control" id="cliente_id">
+                    <option value="" selected=""></option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                    {% endfor %}
+                </select>
+            </p>
 
-        <p>
-            <label for="data_servico">Data servico:</label>
-            <input type="date" class="form-control" name="data_servico" maxlength="100" required="" id="data_servico">
-        </p>
+            <p>
+                <label for="id_servico">Serviço:</label>
+                <select name="servico_id" class="form-control" required="" id="servico_id">
+                    <option value="" selected=""></option>
+                    {% for servico in servicos %}
+                        <option value="{{ servico.id }}">{{ servico.tipo }}</option>
+                    {% endfor %}
+                </select>
+            </p>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="{% url "pg_inicial" %}">
-            <button type="button" class="btn btn-danger">Cancelar</button>
-        </a>
-    </form>
+            <p>
+                <label for="data_servico">Data servico:</label>
+                <input type="date" class="form-control" name="data_servico" maxlength="100" required="" id="data_servico">
+            </p>
 
-    <h2>Lista de Ordem de Serviços</h2>
+            <p>
+                <label for="status">Status:</label>
+                <select class="form-control" name="status" required="" id="status">
+                    <option value="0">Em Andamento</option>
+                    <option value="1">Concluído</option>
+                </select>
+            </p>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Serviço</th>
-                <th scope="col">Data do Serviço</th>
-            </tr>
-        </thead>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url "pg_inicial" %}">
+                <button type="button" class="btn btn-danger">Cancelar</button>
+            </a>
+        </form>
+    </div>
 
-        <tbody>
-            {% for os in ordemServicos %}
+    <div class="container">
+        <h2>Lista de Ordem de Serviços</h2>
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="row">{{ os.id }}</th>
-                    <td>{{ os.cliente.nome }}</td>
-                    <td>{{ os.servico.tipo }}</td>
-                    <td>{{ os.data }}</td>
-                    <td>
-                        {% comment %} <a href="{% url "pg_editar_ordemservico" os.id %}"> {% endcomment %}
-                            <span>Editar</span>
-                        </a>
-                        <a href="{% url "pg_excluir_ordemservico" os.id %}" onclick="return confirm('Deseja realmente excluir?')">
-                            <span>Excluir</span>
-                        </a>
-                    </td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Serviço</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Data do Serviço</th>
+                    <th scope="col">Data de Finalização</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                {% for os in ordemServicos %}
+                    <tr>
+                        <th scope="row">{{ os.id }}</th>
+                        <td>{{ os.cliente.nome }}</td>
+                        <td>{{ os.servico.tipo }}</td>
+                        <td>{{ os.data }}</td>
+                        <td>
+                            {% comment %} <a href="{% url "pg_editar_ordemservico" os.id %}"> {% endcomment %}
+                                <span>Editar</span>
+                            </a>
+                            <a href="{% url "pg_excluir_ordemservico" os.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                                <span>Excluir</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/validacoes.js'%}"></script>

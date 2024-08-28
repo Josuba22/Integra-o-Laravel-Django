@@ -1,39 +1,51 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static "style.css" %}">
-        <title>Elabore Ordens de Serviços</title>
-    </head>
-    <body>
-        <h2>Elabore Ordens de Serviços</h2>
 
-        <div class="div_botoes">
-            <a href="{% url "pg_criar_ordemservico" %}">
-                <button>Ordem de Serviço</button>
-            </a>
+{% block conteudo %}
+        <div class="container">
+            <h2>Elabore Ordens de Serviços</h2>
+        </div>
 
-            <a href="{% url "pg_criar_cliente" %}">
-                <button>Cliente</button>
-            </a>
+        <div class="container">
+            <div class="div_botoes">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_ordemservico" %}">
+                            <button>Ordem de Serviço</button>
+                        </a>
+                    </li>
 
-            <a href="{% url "pg_criar_empresa" %}">
-                <button>Empresa</button>
-            </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_cliente" %}">
+                            <button>Cliente</button>
+                        </a>
+                    </li>
 
-            <a href="{% url "pg_criar_servico" %}">
-                <button>Serviço</button>
-            </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_empresa" %}">
+                            <button>Empresa</button>
+                        </a>
+                    </li>
 
-            <a href="{% url "pg_criar_produto" %}">
-                <button>Produto</button>
-            </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_servico" %}">
+                            <button>Serviço</button>
+                        </a>
+                    </li>
 
-            <a href="{% url "pg_criar_categoria" %}">
-                <button>Categoria</button>
-            </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_produto" %}">
+                            <button>Produto</button>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "pg_criar_categoria" %}">
+                            <button>Categoria</button>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         
         {% for os in ordemservicos %}
@@ -55,6 +67,4 @@
                 </a>
             </div>
         {% endfor %}
-
-    </body>
-</html>
+{% endblock %}

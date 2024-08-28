@@ -5,49 +5,59 @@
     <a href="{% url "pg_inicial" %}">
         <button>Voltar</button>
     </a>
-    <h2>Formulário Categoria</h2>
+
+    <div class="container">
+        <h2>Formulário Categoria</h2>
+    </div>
 {% endblock %}
 
 {% block conteudo %}
-    <form method="post" id="form_categoria">
-        {% csrf_token %}
-        <p>
-            <label for="id_tipo">Tipo:</label>
-            <input type="text" class="form-control" name="tipo" maxlength="100" required="" id="id_tipo" value="{{ categoria.tipo }}">  
-        </p>
 
-        <button type="submit" class="btn btn-primary" id="Salvar">Salvar</button>
-        <a href="{% url "pg_criar_servico" %}">
-            <button type="button" class="btn btn-danger">Cancelar</button>
-        </a>
-    </form>
+    <div class="container">
+        <form method="post" id="form_categoria">
+            {% csrf_token %}
+            <p>
+                <label for="id_tipo">Tipo:</label>
+                <input type="text" class="form-control" name="tipo" maxlength="100" required="" id="id_tipo" value="{{ categoria.tipo }}">  
+            </p>
 
-    <h2>Lista de Categorias</h2>
+            <button type="submit" class="btn btn-primary" id="Salvar">Salvar</button>
+            <a href="{% url "pg_criar_servico" %}">
+                <button type="button" class="btn btn-danger">Cancelar</button>
+            </a>
+        </form>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Tipo</th>
-            </tr>
-        </thead>
+    <div class="container">
+        <h2>Lista de Categorias</h2>
+    </div>
 
-        <tbody>
-            {% for categoria in categorias %}
+    <div class="container">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ categoria.id }}</td>
-                    <td>{{ categoria.tipo }}</td>
-                    <td>
-                        <a href="{% url "pg_editar_categoria" categoria.id %}">
-                            <span>Editar</span>
-                        </a>
-                        <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick="return confirm('Deseja realmente excluir?')">
-                            <span>Excluir</span>
-                        </a>
-                    </td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Tipo</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                {% for categoria in categorias %}
+                    <tr>
+                        <td>{{ categoria.id }}</td>
+                        <td>{{ categoria.tipo }}</td>
+                        <td>
+                            <a href="{% url "pg_editar_categoria" categoria.id %}">
+                                <span>Editar</span>
+                            </a>
+                            <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                                <span>Excluir</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <script src="{% static "js/validacoes_categoria.js" %}"></script>
 {% endblock %}
