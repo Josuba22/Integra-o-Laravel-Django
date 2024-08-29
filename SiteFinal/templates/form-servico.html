@@ -69,6 +69,7 @@
                     <th scope='col'>Valor</th>
                     <th scope='col'>Empresa</th>
                     <th scope='col'>Categoria</th>
+                    <th scope="col">Opções</th>
                 </tr>
             </thead>
 
@@ -80,12 +81,18 @@
                         <td>{{ servico.empresa.razao_social }}</td>
                         <td>{{ servico.categoria.tipo }}</td>
                         <td>
-                            <a href="{% url "pg_editar_servico" servico.id %}">
-                                <span>Editar Serviço</span>
-                            </a>
-                            <a href="{% url "pg_excluir_servico" servico.id %}" onclick="return confirm('Deseja realmente excluir?')">
-                                <span>Excluir serviço</span>
-                            </a>
+                            <div class="btns_formulario">
+                                <a href="{% url "pg_editar_servico" servico.id %}">
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=86374&format=png&color=000000" width='35' height='35'>Editar Serviço</img>
+                                    </div>
+                                </a>
+                                <a href="{% url "pg_excluir_servico" servico.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=67884&format=png&color=000000" width='35' height='35'>Excluir servico</img>
+                                    </div>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

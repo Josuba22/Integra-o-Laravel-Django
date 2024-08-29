@@ -38,6 +38,7 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Tipo</th>
+                    <th scope="col">Opções</th>
                 </tr>
             </thead>
 
@@ -47,12 +48,19 @@
                         <td>{{ categoria.id }}</td>
                         <td>{{ categoria.tipo }}</td>
                         <td>
-                            <a href="{% url "pg_editar_categoria" categoria.id %}">
-                                <span>Editar</span>
-                            </a>
-                            <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick="return confirm('Deseja realmente excluir?')">
-                                <span>Excluir</span>
-                            </a>
+                            <div class="btns_formulario">
+                                <a href="{% url "pg_editar_categoria" categoria.id %}">
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=86374&format=png&color=000000" width='35' height='35'>Editar Categoria</img>
+                                    </div>
+                                </a>
+
+                                <a href="{% url "pg_excluir_categoria" categoria.id %}" onclick="return confirm('Deseja realmente excluir?')">
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=67884&format=png&color=000000" width='35' height='35'>Excluir Categoria</img>
+                                    </div>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

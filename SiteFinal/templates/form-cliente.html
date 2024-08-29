@@ -50,6 +50,7 @@
                     <th scope="col">Foto Perfil</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Data de Nascimento</th>
+                    <th scope="col">Opções</th>
                 </tr>
             </thead>
 
@@ -57,16 +58,21 @@
                 {% for cliente in clientes %}
                     <tr>
                         <th scope="row">{{ cliente.id }}</th>
+                        <td>{{ cliente.foto }}</td>
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.data_nascimento }}</td>
                         <td>
                             <div class="btns_formulario">
                                 <a href="{% url "pg_editar_cliente" cliente.id %}">
-                                    <span>Editar Cliente</span>
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=86374&format=png&color=000000" width='35' height='35'>Editar Cliente</img>
+                                    </div>
                                 </a>
 
                                 <a href="{% url "pg_excluir_cliente" cliente.id %}" onclick=" return confirm('Deseja realmente excluir?')">
-                                    <span>Excluir Cliente</span>
+                                    <div>
+                                        <img src="https://img.icons8.com/?size=100&id=67884&format=png&color=000000" width='35' height='35'>Excluir Cliente</img>
+                                    </div>
                                 </a>
                             </div>
                         </td>
