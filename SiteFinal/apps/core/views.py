@@ -243,7 +243,7 @@ def CriarCliente(request):
     # Cabeçalhos que você deseja enviar com a solicitação
     headers = {
         'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        # 'Content-Type': 'application/json'
     }
     
     if request.method == "GET":
@@ -259,25 +259,34 @@ def CriarCliente(request):
         return render(request, "form-cliente.html", {"clientes": clientes})
     else:
        # Dados que você deseja enviar no corpo da solicitação POST
-        json = {
-            'nome': request.POST['nome'],
-            'data_nascimento': request.POST['data_nascimento'],
-            'foto': request.POST['foto'],
+        foto = request.FILES.get('foto')
+        nome = request.POST['nome']
+        data_nascimento = request.POST['data_nascimento']
+
+        # Preparando os dados para envio
+        files = {
+            'foto': (foto.name, foto, foto.content_type)
+        }
+        data = {
+            'nome': nome,
+            'data_nascimento': data_nascimento
         }
                
         # Fazendo a solicitação POST
-        response = requests.post(url, json=json, headers=headers)
+        response = requests.post(url, data=data, files=files, headers=headers)
 
         # Obtendo o conteúdo da resposta
+
+        # return HttpResponse(response)
         
         if response.status_code in [200, 201]:
             try:
                 response_data = response.json()
                 return redirect("pg_criar_cliente")
             except requests.JSONDecodeError:
-                print("A resposta não é um JSON válido.")
+                return HttpResponse("A resposta não é um JSON válido.", status=500)
         else:
-            return HttpResponse('Erro ao consumir a API: ', response.status_code)
+            return HttpResponse(f'Erro na solicitação: {response.status_code}', status=response.status_code)
 
 def EditarCliente(request, id_cliente):
     url_editar_cliente = 'http://127.0.0.1:9000/api/clientes/' + str(id_cliente) # Substitua pela URL da API real
@@ -311,6 +320,7 @@ def EditarCliente(request, id_cliente):
             'nome': request.POST['nome'],
             'data_nascimento': request.POST['data_nascimento'],
             'foto': request.POST['foto'],
+            'status': request.POST['status'],
         }
                
         # Fazendo a solicitação POST

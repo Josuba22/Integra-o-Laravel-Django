@@ -31,6 +31,27 @@
                 <input type="file" name="foto"> 
             </p>
 
+            <p>
+                <img scr="{{ foto }}">
+            </p>
+
+            {% if cliente %}
+            <p>
+                <label for="status">Status:</label>
+                <select class="form-control" name="status" required="" id="status">
+                    <option value="{{ cliente.status }}">
+                        {% if cliente.status == 0 %}
+                        <td>Ativo</td>
+                        {% else %}
+                        <td>Inativo</td>
+                        {% endif %}
+                    </option>
+                    <option value="0">Ativo</option>
+                    <option value="1">Inativo</option>
+                </select>
+            </p>
+            {% endif %}
+            
             <button type="submit" class="btn btn-primary">Salvar</button>
             <a href="{% url "pg_criar_cliente" %}">
                 <button type="button" class="btn btn-danger">Cancelar</button>
@@ -50,6 +71,7 @@
                     <th scope="col">Foto Perfil</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Data de Nascimento</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Opções</th>
                 </tr>
             </thead>
@@ -61,6 +83,11 @@
                         <td>{{ cliente.foto }}</td>
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.data_nascimento }}</td>
+                        {% if cliente.status == 0 %}
+                        <td>Ativo</td>
+                        {% else %}
+                        <td>Inativo</td>
+                        {% endif %}
                         <td>
                             <div class="btns_formulario">
                                 <a href="{% url "pg_editar_cliente" cliente.id %}">
