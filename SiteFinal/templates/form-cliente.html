@@ -16,6 +16,9 @@
     <div class="container">
         <form method="post" id='form_cliente' enctype="multipart/form-data"> 
             {% csrf_token %}
+
+            <input type="hidden" name="status" value="{{ cliente.status }}">
+            
             <p>
                 <label for="id_cliente">Nome:</label>
                 <input type="text" name="nome" maxlength="100"  id="nome" value="{{ cliente.nome }}">  
@@ -32,24 +35,24 @@
             </p>
 
             <p>
-                <img scr="{{ foto }}">
+                <img src="{{ foto }}">
             </p>
 
             {% if cliente %}
-            <p>
-                <label for="status">Status:</label>
-                <select class="form-control" name="status" required="" id="status">
-                    <option value="{{ cliente.status }}">
-                        {% if cliente.status == 0 %}
-                        <td>Ativo</td>
-                        {% else %}
-                        <td>Inativo</td>
-                        {% endif %}
-                    </option>
-                    <option value="0">Ativo</option>
-                    <option value="1">Inativo</option>
-                </select>
-            </p>
+                <p>
+                    <label for="status">Status:</label>
+                    <select class="form-control" name="status" required="" id="status">
+                        <option value="{{ cliente.status }}" selected="{{ cliente.status }}">
+                            {% if cliente.status == 0 %}
+                                <td>Ativo</td>
+                            {% else %}
+                                <td>Inativo</td>
+                            {% endif %}
+                        </option>
+                        <option value="0">Ativo</option>
+                        <option value="1">Inativo</option>
+                    </select>
+                </p>
             {% endif %}
             
             <button type="submit" class="btn btn-primary">Salvar</button>
@@ -84,9 +87,9 @@
                         <td>{{ cliente.nome }}</td>
                         <td>{{ cliente.data_nascimento }}</td>
                         {% if cliente.status == 0 %}
-                        <td>Ativo</td>
+                            <td>Ativo</td>
                         {% else %}
-                        <td>Inativo</td>
+                            <td>Inativo</td>
                         {% endif %}
                         <td>
                             <div class="btns_formulario">

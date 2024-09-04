@@ -235,7 +235,6 @@ def RetornaToken(request):
 
 def CriarCliente(request):
     url = 'http://127.0.0.1:9000/api/clientes' # Substitua pela URL da API real
-
     obter_token = RetornaToken(request)
     conteudo_bytes = obter_token.content  # Obtém o conteúdo como bytes
     token = conteudo_bytes.decode('utf-8')
@@ -256,12 +255,13 @@ def CriarCliente(request):
     
         # Extraia a string desejada do JSON
         clientes = dados['clientes']
-        return render(request, "form-cliente.html", {"clientes": clientes})
+        return render(request, "form-cliente.html", {"clientes": clientes,})
     else:
        # Dados que você deseja enviar no corpo da solicitação POST
         foto = request.FILES.get('foto')
         nome = request.POST['nome']
         data_nascimento = request.POST['data_nascimento']
+        status = request.POST['status']
 
         # Preparando os dados para envio
         files = {
@@ -269,7 +269,8 @@ def CriarCliente(request):
         }
         data = {
             'nome': nome,
-            'data_nascimento': data_nascimento
+            'data_nascimento': data_nascimento,
+            'status': status,
         }
                
         # Fazendo a solicitação POST
@@ -299,7 +300,7 @@ def EditarCliente(request, id_cliente):
     # Cabeçalhos que você deseja enviar com a solicitação
     headers = {
         'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
+        # 'Content-Type': 'application/json'
     }
 
     resposta = requests.get(url_editar_cliente, headers=headers)
@@ -316,16 +317,45 @@ def EditarCliente(request, id_cliente):
         return render(request, "form-cliente.html", {"cliente": cliente, 'clientes' : clientes}) 
     else:
         # Dados que você deseja enviar no corpo da solicitação POST
-        json = {
-            'nome': request.POST['nome'],
-            'data_nascimento': request.POST['data_nascimento'],
-            'foto': request.POST['foto'],
-            'status': request.POST['status'],
-        }
+        foto = request.FILES.get('foto')
+        nome = request.POST['nome']
+        data_nascimento = request.POST['data_nascimento']
+        status = request.POST['status']
+
+        # Preparando os dados para envio
+        # files = {
+        #     'foto': (foto.name, foto, foto.content_type)
+        # }
+        # files = {}
+        # if foto:
+        #     files['foto'] = (foto.name, foto, foto.content_type)
+        # data = {
+        #     'nome': nome,
+        #     'data_nascimento': data_nascimento,
+        #     'status': status,
+        # }
+
+        if foto:
+            files = {
+                'foto': (foto.name, foto, foto.content_type) 
+            }
+            data = {
+                'nome': nome,
+                'data_nascimento': data_nascimento,
+                'status': request.POST['status'] # Adicionando o campo 'status'
+            }
+            response = requests.put(url_editar_cliente, data=data, files=files, headers=headers)
+        else:
+            data = {
+                'nome': nome,
+                'data_nascimento': data_nascimento,
+                'status': request.POST['status'] # Adicionando o campo 'status'
+            }
+            response = requests.put(url_editar_cliente, json=data, headers=headers) 
                
         # Fazendo a solicitação POST
-        response = requests.put(url_editar_cliente, json=json, headers=headers)
-
+        # response = requests.put(url_editar_cliente, data=data, files=files, headers=headers)
+        # return HttpResponse (response) #descomentar só se for fazer um DEBUG
         # Obtendo o conteúdo da resposta
         
         if response.status_code in [200, 201]:
